@@ -19,8 +19,8 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install pyinstaller
+          pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+          pip install fastapi uvicorn opencv-python-headless ultralytics numpy pywebview pyinstaller
 
       - name: Download YOLO Weights
         run: |
@@ -28,11 +28,10 @@ jobs:
 
       - name: Build Executable with PyInstaller
         run: |
-          pyinstaller --noconsole --onefile --add-data "yolov8n.pt;." app.py
+          pyinstaller --noconsole --onefile --collect-all ultralytics --add-data "yolov8n.pt;." app.py
 
       - name: Upload EXE Artifact
         uses: actions/upload-artifact@v4
         with:
           name: AI-CCTV-Sentinel-Windows
           path: dist/app.exe
-          
